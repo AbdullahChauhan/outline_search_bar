@@ -371,7 +371,9 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
   Widget _buildSearchBar() {
     final children = <Widget>[];
     children.add(Expanded(child: _buildTextField()));
-    children.add(_buildClearButton());
+    if (_isShowingClearButton) {
+      children.add(_buildClearButton());
+    }
 
     if (widget.hideSearchButton == false) {
       if (widget.searchButtonPosition == SearchButtonPosition.leading) {

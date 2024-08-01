@@ -214,8 +214,6 @@ class OutlineSearchBar extends StatefulWidget {
 class _OutlineSearchBarState extends State<OutlineSearchBar>
     with TickerProviderStateMixin {
   late TextEditingController _textEditingController;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
   late Debouncer _debouncer;
   // Whether to show the clear button.
   bool _isShowingClearButton = false;
@@ -228,11 +226,9 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
   void _textEditingControllerListener() {
     if (_textEditingController.text.isEmpty && _isShowingClearButton) {
       _isShowingClearButton = false;
-      _animationController.reverse();
     } else if (_textEditingController.text.isNotEmpty &&
         !_isShowingClearButton) {
       _isShowingClearButton = true;
-      _animationController.forward();
     }
   }
 
@@ -240,17 +236,6 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
   void initState() {
     super.initState();
     _debouncer = Debouncer(milliseconds: widget.debounceDelay);
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-      reverseDuration: const Duration(milliseconds: 200),
-    );
-
-    _fadeAnimation =
-        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
-
-    _animationController.reverse();
 
     _textEditingController =
         widget.textEditingController ?? TextEditingController();
@@ -264,7 +249,6 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
 
   @override
   void dispose() {
-    _animationController.dispose();
     _textEditingController.removeListener(_textEditingControllerListener);
     super.dispose();
   }
@@ -387,8 +371,7 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
   Widget _buildSearchBar() {
     final children = <Widget>[];
     children.add(Expanded(child: _buildTextField()));
-    children.add(
-        FadeTransition(opacity: _fadeAnimation, child: _buildClearButton()));
+    children.add(_buildClearButton());
 
     if (widget.hideSearchButton == false) {
       if (widget.searchButtonPosition == SearchButtonPosition.leading) {

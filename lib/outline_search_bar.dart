@@ -225,10 +225,10 @@ class _OutlineSearchBarState extends State<OutlineSearchBar>
 
   void _textEditingControllerListener() {
     if (_textEditingController.text.isEmpty && _isShowingClearButton) {
-      _isShowingClearButton = false;
+      setState(() => _isShowingClearButton = false);
     } else if (_textEditingController.text.isNotEmpty &&
         !_isShowingClearButton) {
-      _isShowingClearButton = true;
+      setState(() => _isShowingClearButton = true);
     }
   }
 
